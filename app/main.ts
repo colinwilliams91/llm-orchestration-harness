@@ -1,49 +1,32 @@
 import OpenAI from "openai";
+import { ERRORS, EXTERNAL_URLS, MODEL } from "./constants";
+import { CLIENT_REQ_CONFIG } from "./config";
 
 async function main() {
   const [, , flag, prompt] = process.argv;
-  const apiKey = process.env.OPENROUTER_API_KEY;
-  const baseURL =
-    process.env.OPENROUTER_BASE_URL ?? "https://openrouter.ai/api/v1";
+  const API_KEY = process.env.OPENROUTER_API_KEY;
+  const BASE_URL = process.env.OPENROUTER_BASE_URL ?? EXTERNAL_URLS.OPEN_ROUTER_BASE;
 
-  if (!apiKey) {
-    throw new Error("OPENROUTER_API_KEY is not set");
+  if (!API_KEY)
+  {
+    throw new Error(ERRORS.MISSING_API_KEY);
   }
-  if (flag !== "-p" || !prompt) {
-    throw new Error("error: -p flag is required");
+  if (flag !== "-p" || !prompt)
+  {
+    throw new Error(ERRORS.MISSING_REQUIRED_P_FLAG);
   }
 
-  const client = new OpenAI({
-    apiKey: apiKey,
-    baseURL: baseURL,
-  });
+  const client = new OpenAI({ apiKey: API_KEY, baseURL: BASE_URL });
 
   const response = await client.chat.completions.create({
-    model: "anthropic/claude-haiku-4.5",
-    messages: [{ role: "user", content: prompt }],
-    tools: [
-      {
-        "type": "function",
-        "function": {
-          "name": "read_file",
-          "description": "Read and return the contents of a file",
-          "parameters": {
-            "type": "object",
-            "properties": {
-              "file_path": {
-                "type": "string",
-                "description": "The path to the file to read"
-              }
-            },
-            "required": ["file_path"]
-          }
-        }
-      }
-    ],
+    model: MODEL.NAME,
+    messages: [{ role: MODEL.CHAT_RBAC, content: prompt }],
+    tools: CLIENT_REQ_CONFIG.TOOLS,
   });
 
-  if (!response.choices || response.choices.length === 0) {
-    throw new Error("no choices in response");
+  if (!response.choices || response.choices.length === 0)
+  {
+    throw new Error(ERRORS.RESPONSE_MISSING_CHOICES);
   }
 
   // You can use print statements as follows for debugging, they'll be visible when running tests.
