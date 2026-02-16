@@ -13,4 +13,39 @@ export const ERRORS = {
     MISSING_API_KEY: "OPENROUTER_API_KEY is not set",
     MISSING_REQUIRED_P_FLAG: "error: -p flag is required",
     RESPONSE_MISSING_CHOICES: "no choices in response",
+    UNSUPPORTED: {
+        TOOL_CALL_TYPE: "Currently unsupported tool call type: ",
+        TOOL_NAME_NOT_FOUND: "No tool found with name: ",
+    },
 };
+
+// TODO: should types live somewhere else?
+export const TOOL_NAMES = {
+    READ_FILE: "read_file",
+} as const;
+
+// Tool argument types
+export interface ReadFileArgs {
+    file_path: string;
+}
+
+export type IToolNames = typeof TOOL_NAMES[keyof typeof TOOL_NAMES];
+
+/**
+ * Re-implement this once we want dynamic tool parsing
+ * The parser function below it can leverage the Map
+ */
+// Map tool names to their argument types
+// export type ToolArgsMap = {
+//     [TOOL_NAMES.READ_FILE]: ReadFileArgs;
+// };
+
+/**
+ * See above Map comment
+ */
+// function parseToolArgs<T extends IToolNames>(
+//     toolName: T,
+//     args: string
+// ): ToolArgsMap[T] {
+//     return JSON.parse(args);
+// }
