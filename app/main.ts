@@ -30,19 +30,18 @@ async function main() {
       tools: CLIENT_REQ_CONFIG.TOOLS,
     });
 
+    /* use print statements for debugging (visible when running tests) */
+    console.error("Logs from your program will appear here!");
+    console.log(response.choices[0].message.content);
+
     /////////////////////////////////////
     // RESPONSE HANDLING ////////////////
     /////////////////////////////////////
     validateHasChoices(response);
 
     if (hasToolCalls(response)) {
-      // TODO: fix the weird typing issue here (api type ChatCompletionMessageFunctionToolCall is the only one with `function` property)
-      dispatcher(response.choices[0].message.tool_calls?[0]);
+      dispatcher(response.choices[0].message.tool_calls![0]);
     }
-
-    /* use print statements for debugging (visible when running tests) */
-    console.error("Logs from your program will appear here!");
-    console.log(response.choices[0].message.content);
 
   } catch (error) {
 
