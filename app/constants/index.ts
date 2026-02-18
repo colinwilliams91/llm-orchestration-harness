@@ -13,9 +13,16 @@ export const ERRORS = {
     MISSING_API_KEY: "OPENROUTER_API_KEY is not set",
     MISSING_REQUIRED_P_FLAG: "error: -p flag is required",
     RESPONSE_MISSING_CHOICES: "no choices in response",
+    FAILED_TO_READ_FILE: "Error reading file: ",
+    INVALID_ARGS: {
+        BASE: "Invalid arguments: ",
+        MISSING_FILE_PATH: "missing file_path property",
+        INVALID_FILE_PATH: "file_path must be a non-empty string",
+    },
     UNSUPPORTED: {
         TOOL_CALL_TYPE: "Currently unsupported tool call type: ",
         TOOL_NAME_NOT_FOUND: "No tool found with name: ",
+        NOT_IMPLEMENTED: "Not implemented yet: ",
     },
 };
 
@@ -41,7 +48,7 @@ export type IToolNames = typeof TOOL_NAMES[keyof typeof TOOL_NAMES];
 // };
 
 /**
- * See above Map comment
+ * See above comment
  */
 // function parseToolArgs<T extends IToolNames>(
 //     toolName: T,
