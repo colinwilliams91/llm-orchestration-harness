@@ -27,7 +27,7 @@ async function main() {
       tools: CLIENT_REQ_CONFIG.TOOLS,
     });
 
-    /* use print statements for debugging (visible when running tests) */
+    /* use print statements for debugging (stdout visible when running tests) */
     console.error("Logs from your program will appear here!");
 
     /////////////////////////////////////

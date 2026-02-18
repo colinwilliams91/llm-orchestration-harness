@@ -23,10 +23,6 @@ export function validateArgsHaveFilePath<T>(args: T): asserts args is T & { file
     throw new Error(ERRORS.INVALID_ARGS.BASE + ERRORS.INVALID_ARGS.INVALID_FILE_PATH);
 }
 
-// if (!parsed.file_path || typeof parsed.file_path !== 'string') {
-//     throw new Error(`Invalid arguments for _read tool call: missing or invalid file_path`);
-// }
-
 export function validateFunctionTool(toolCall: ChatCompletionMessageToolCall): asserts toolCall is ChatCompletionMessageFunctionToolCall {
   if (toolCall.type !== "function")
     throw new Error(ERRORS.UNSUPPORTED.TOOL_CALL_TYPE + toolCall.type);
