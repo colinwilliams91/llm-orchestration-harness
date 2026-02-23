@@ -1,3 +1,4 @@
+import type { ChatCompletionToolMessageParam } from "openai/resources";
 import { processResponseMessage } from "../app/utils/index";
 
 /**
@@ -10,3 +11,6 @@ processResponseMessage(`This is a test response message from the utils test file
 Let's see if it works! (no special characters)`);
 
 processResponseMessage("\n hi \n this \n has \n new lines.");
+
+/* This accurately represents a dummy LLM response */
+const dummyLLMResponse: ChatCompletionToolMessageParam = { role: "tool", tool_call_id: "1234", content: "hellow worl" };
