@@ -1,8 +1,14 @@
 import OpenAI from "openai";
+import type { ChatCompletion, ChatCompletionMessageParam } from "openai/resources";
 import { ERRORS, EXTERNAL_URLS, MODEL } from "./constants";
 import { CLIENT_REQ_CONFIG } from "./config";
 import { validateHasChoices, hasToolCalls } from "./utils";
 import { dispatcher } from "./api";
+
+export type Context = {
+    cache: ChatCompletionMessageParam[];
+    client: OpenAI;
+};
 
 async function main() {
   try {
@@ -21,9 +27,13 @@ async function main() {
     // INSTANTIATE AND REQUEST //////////
     const client = new OpenAI({ apiKey: API_KEY, baseURL: BASE_URL });
 
+    const cache: ChatCompletionMessageParam[] = [{ role: MODEL.CHAT_RBAC, content: prompt }];
+
+    const context: Context = { cache, client };
+
     const response = await client.chat.completions.create({
       model: MODEL.NAME,
-      messages: [{ role: MODEL.CHAT_RBAC, content: prompt }],
+      messages: cache,
       tools: CLIENT_REQ_CONFIG.TOOLS,
     });
 
