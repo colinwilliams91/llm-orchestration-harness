@@ -7,13 +7,13 @@ const _read = (args: string): string => {
     const parsed = JSON.parse(args) as ReadFileArgs;
     validateArgsHaveFilePath(parsed);
 
-    try {
-        const data = fs.readFileSync(parsed.file_path, "utf-8");
-        const output = processResponseMessage(data);
-        /* print stdout per the requirements */
-        // console.log(output);
-        return output;
-    } catch (error) {
+    try
+    {
+        const output = fs.readFileSync(parsed.file_path, "utf-8");
+        return processResponseMessage(output);
+    }
+    catch (error)
+    {
         throw new Error(ERRORS.FAILED_TO_READ_FILE + (error instanceof Error ? error.message : String(error)));
     }
 };
@@ -30,7 +30,7 @@ const _tools = {
 /**
  * `@note type` of tool_calls will always be "function" for tools
  */
-export const dispatcher = (toolCall: ChatCompletionMessageToolCall) => {
+export const dispatcher = (toolCall: ChatCompletionMessageToolCall): string => {
     validateFunctionTool(toolCall);
 
     const { name: funcName, arguments: args } = toolCall.function;
@@ -44,6 +44,6 @@ export const dispatcher = (toolCall: ChatCompletionMessageToolCall) => {
             // TODO: How do we get the `res` back up to the layer that calls the tool (main.ts currently)?
             // Do we need to change the dispatcher signature to return a string?
             // Does this begin to overload the responsibility of the dispatcher function?
-            break;
+            return res;
     }
 };
