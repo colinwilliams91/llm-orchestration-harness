@@ -1,8 +1,10 @@
-import type { ChatCompletionMessageParam } from "openai/resources";
+import type { ChatCompletionAssistantMessageParam, ChatCompletionMessageParam, ChatCompletionToolMessageParam, ChatCompletionUserMessageParam } from "openai/resources";
 
 export const MODEL = {
     NAME: "anthropic/claude-haiku-4.5",
-    CHAT_RBAC: "user" satisfies ChatCompletionMessageParam["role"],
+    CHAT_RBAC: "user" satisfies ChatCompletionUserMessageParam["role"],
+    TOOL_RBAC: "tool" satisfies ChatCompletionToolMessageParam["role"],
+    ASSISTANT_RBAC: "assistant" satisfies ChatCompletionAssistantMessageParam["role"]
 } as const;
 
 export const EXTERNAL_URLS = {
