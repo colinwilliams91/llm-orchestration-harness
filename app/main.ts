@@ -38,19 +38,45 @@ async function main() {
     });
 
     /* use print statements for debugging (stdout visible when running tests) */
-    console.error("Logs from your program will appear here!");
+    console.error("Begin program stdout:");
 
     /////////////////////////////////////
     // RESPONSE HANDLING ////////////////
     validateHasChoices(response);
 
-    if (hasToolCalls(response))
-      dispatcher(response.choices[0].message.tool_calls![0]);
-    else
-      console.log(response.choices[0].message.content);
+    // TODO: include validateHasChoices in loop or only before?
+    while(true) // TODO: need a better loop termination condition (choice.finish_reason === "stop" or hasToolCalls false?)
+    {
 
-  } catch (error) {
+      // TODO: do we need to discriminate between tool calls and normal content at the API response level?
+      // Or can we just always check for tool calls in the loop and handle accordingly?
+      if (hasToolCalls(response))
+      {
+        try
+        {
+          const res = dispatcher(response.choices[0].message.tool_calls![0]);
+          console.log(res);
+          // TODO: need to figure out how to feed the tool response back into the conversation context
+          // and continue the conversation with the updated context (i.e. with the tool response included in the message history)
+          cache.push({ role: MODEL.CHAT_RBAC, content: res });
+          // TODO: what condition terminates the agent loop?
+        }
+        catch (error)
+        {
+          console.error("Internal failure to dispatch:");
+          console.error(error instanceof Error ? error.message : String(error));
+        }
+      }
+      else
+      {
+        // TODO: return or print the final response content and break the loop (condition: empty tool_calls)
+        console.log(response.choices[0].message.content);
+      }
+    }
 
+  }
+  catch (error)
+  {
     console.error(error instanceof Error ? error.message : String(error));
     process.exit(1);
   }
