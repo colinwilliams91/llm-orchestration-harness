@@ -1,5 +1,5 @@
 import { type ChatCompletion, type ChatCompletionMessageFunctionToolCall, type ChatCompletionMessageToolCall } from "openai/resources";
-import { ERRORS, type IToolNames, TOOL_NAMES } from "../constants/index";
+import { ERRORS, type IToolNames, TOOL_NAMES, type ToolArgsMap } from "../constants/index";
 
 /**
  * @keyword has* for boolean return type
@@ -11,8 +11,11 @@ import { ERRORS, type IToolNames, TOOL_NAMES } from "../constants/index";
 ////////////////////////////////////////////
 
 export const validateHasChoices = (response: ChatCompletion & { _request_id?: string | null }): void => {
+  // console.log("inside CHOICE VALIDATOR -- ");
   if (!response.choices || response.choices.length === 0)
     throw new Error(ERRORS.RESPONSE_MISSING_CHOICES);
+  // TODO: get rid of these logs...
+  // console.dir(response.choices[0]?.message);
 };
 
 export function validateArgsHaveFilePath<T>(args: T): asserts args is T & { file_path: string } {
@@ -61,3 +64,10 @@ export const getParsedToolCall = (
 ////////////////////////////////////////////
 
 export const processResponseMessage = (res: string): string => res.trim();
+
+export function parseToolArgs<T extends IToolNames>(
+    toolName: T,
+    args: string
+): ToolArgsMap[T] {
+    return JSON.parse(args);
+}

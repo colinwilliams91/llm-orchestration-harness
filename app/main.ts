@@ -23,7 +23,8 @@ async function main() {
 
     const client = new OpenAI({ apiKey: API_KEY, baseURL: BASE_URL });
 
-    const cache: ChatCompletionMessageParam[] = [{ role: MODEL.CHAT_RBAC, content: prompt }];
+    // TODO: IS THIS CACHE THE "CONTEXT WINDOW"?
+    const cache: ChatCompletionMessageParam[] = [{ role: MODEL.USER_RBAC, content: prompt }];
 
     const context: Context = { cache, client };
 
@@ -32,6 +33,8 @@ async function main() {
 
     while(true) // TODO: need a better loop termination condition (choice.finish_reason === "stop" or hasToolCalls false?)
     {
+      // TODO: REFACTOR TO RESPONSE FROM CHATCOMPLETION API:
+      // [Chat Completions with Responses](https://platform.openai.com/docs/guides/responses-vs-chat-completions?api-mode=responses)
       const response = await client.chat.completions.create({
         model: MODEL.NAME,
         messages: cache,
@@ -66,11 +69,13 @@ async function main() {
       else
       {
         // TODO: return or print the final response content and break the loop (condition: empty tool_calls)
+        // console.log("Final response from LLM:");
         console.log(response.choices[0].message.content);
         break;
       }
     }
-
+    // console.log("this is the cache !!");
+    // console.dir(cache);
   }
   catch (error)
   {

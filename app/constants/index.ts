@@ -2,7 +2,7 @@ import type { ChatCompletionAssistantMessageParam, ChatCompletionMessageParam, C
 
 export const MODEL = {
     NAME: "anthropic/claude-haiku-4.5",
-    CHAT_RBAC: "user" satisfies ChatCompletionUserMessageParam["role"],
+    USER_RBAC: "user" satisfies ChatCompletionUserMessageParam["role"],
     TOOL_RBAC: "tool" satisfies ChatCompletionToolMessageParam["role"],
     ASSISTANT_RBAC: "assistant" satisfies ChatCompletionAssistantMessageParam["role"]
 } as const;
@@ -31,11 +31,17 @@ export const ERRORS = {
 // TODO: should types live somewhere else?
 export const TOOL_NAMES = {
     READ_FILE: "read_file",
+    WRITE_FILE: "write_file",
 } as const;
 
 // Tool argument types
 export interface ReadFileArgs {
     file_path: string;
+}
+
+export interface WriteFileArgs {
+    file_path: string;
+    content: string;
 }
 
 export type IToolNames = typeof TOOL_NAMES[keyof typeof TOOL_NAMES];
@@ -45,9 +51,10 @@ export type IToolNames = typeof TOOL_NAMES[keyof typeof TOOL_NAMES];
  * The parser function below it can leverage the Map
  */
 // Map tool names to their argument types
-// export type ToolArgsMap = {
-//     [TOOL_NAMES.READ_FILE]: ReadFileArgs;
-// };
+export type ToolArgsMap = {
+    [TOOL_NAMES.READ_FILE]: ReadFileArgs;
+    [TOOL_NAMES.WRITE_FILE]: WriteFileArgs;
+};
 
 /**
  * See above comment
