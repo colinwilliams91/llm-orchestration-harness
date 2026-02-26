@@ -4,6 +4,8 @@ import type { ChatCompletionMessageToolCall } from "openai/resources";
 import { ERRORS, TOOL_NAMES, type BashArgs, type ReadFileArgs, type WriteFileArgs } from "../constants";
 import { isValidToolName, processResponseMessage, validateArgsHaveFilePath, validateFunctionTool } from "../utils";
 
+// TODO: add BPE (tokenizer) service layer that all dispatched tool calls go through (caching layer in main())
+
 const _read = (args: string): string => {
     const parsed = JSON.parse(args) satisfies ReadFileArgs;
     validateArgsHaveFilePath(parsed);
