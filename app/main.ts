@@ -23,15 +23,14 @@ async function main() {
 
     const client = new OpenAI({ apiKey: API_KEY, baseURL: BASE_URL });
 
-    // TODO: IS THIS CACHE THE "CONTEXT WINDOW"?
+    // TODO: IS THIS CACHE THE "CONTEXT WINDOW"? -> i don't think so (just our client side memory of the conversation history)
     const cache: ChatCompletionMessageParam[] = [{ role: MODEL.USER_RBAC, content: prompt }];
 
     const context: Context = { cache, client };
 
-    /* use print statements for debugging (stdout visible when running tests) */
     console.error("Begin program stdout:");
 
-    while(true) // TODO: need a better loop termination condition (choice.finish_reason === "stop" or hasToolCalls false?)
+    while(true)
     {
       // TODO: REFACTOR TO RESPONSE FROM CHATCOMPLETION API:
       // [Chat Completions with Responses](https://platform.openai.com/docs/guides/responses-vs-chat-completions?api-mode=responses)
@@ -41,22 +40,27 @@ async function main() {
         tools: CLIENT_REQ_CONFIG.TOOLS,
       });
 
+      // console.log("LLM res {outer block - aka WHILE} ->");
+      // console.dir(response);
+      // console.log("LLM message content {outer block- aka WHILE} ->");
+      // console.log(response.choices[0].message);
       validateHasChoices(response);
 
-      // TODO: do we need to discriminate between tool calls and normal content at the API response level?
-      // Or can we just always check for tool calls in the loop and handle accordingly?
       if (hasToolCalls(response))
       {
         try
         {
           const toolCalls = response.choices[0].message.tool_calls!;
+          // ...cache the LLM response with role "assistant", its content and requested tool calls
           cache.push({ role: MODEL.ASSISTANT_RBAC, content: response.choices[0].message.content, tool_calls: toolCalls });
 
           for (const toolCall of toolCalls)
           {
             const res: string = dispatcher(toolCall);
-            // console.log(toolCall.id);
-            // console.dir(res);
+            // console.log("Tool call {inner block} ->");
+            // console.dir(toolCall);
+
+            // ...push our internal output (content) from the tool call back to the cache w/ role "tool" and tool_call_id GUID
             cache.push({ role: MODEL.TOOL_RBAC, tool_call_id: toolCall.id, content: res });
           }
         }
@@ -66,16 +70,15 @@ async function main() {
           console.error(error instanceof Error ? error.message : String(error));
         }
       }
-      else
+      // ...LLM made no choices, it sets finish_reason to "stop" -> we cache response content -> end chat
+      else // (!response.choices.length || response.choices[0].finish_reason === "stop")
       {
-        // TODO: return or print the final response content and break the loop (condition: empty tool_calls)
-        // console.log("Final response from LLM:");
+        cache.push({ role: MODEL.ASSISTANT_RBAC, content: response.choices[0].message.content });
+        // ...message.content is LLM determined output based on entire conversation context
         console.log(response.choices[0].message.content);
         break;
       }
     }
-    // console.log("this is the cache !!");
-    // console.dir(cache);
   }
   catch (error)
   {
