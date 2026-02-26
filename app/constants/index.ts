@@ -32,6 +32,7 @@ export const ERRORS = {
 export const TOOL_NAMES = {
     READ_FILE: "read_file",
     WRITE_FILE: "write_file",
+    BASH: "Bash",
 } as const;
 
 // Tool argument types
@@ -44,6 +45,10 @@ export interface WriteFileArgs {
     content: string;
 }
 
+export interface BashArgs {
+    command: string;
+}
+
 export type IToolNames = typeof TOOL_NAMES[keyof typeof TOOL_NAMES];
 
 /**
@@ -54,6 +59,7 @@ export type IToolNames = typeof TOOL_NAMES[keyof typeof TOOL_NAMES];
 export type ToolArgsMap = {
     [TOOL_NAMES.READ_FILE]: ReadFileArgs;
     [TOOL_NAMES.WRITE_FILE]: WriteFileArgs;
+    [TOOL_NAMES.BASH]: BashArgs;
 };
 
 /**
