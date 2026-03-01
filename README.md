@@ -1,34 +1,11 @@
-[![progress-banner](https://backend.codecrafters.io/progress/claude-code/8dd54961-4a31-482b-814c-95ec8f5e2cc7)](https://app.codecrafters.io/users/codecrafters-bot?r=2qF)
-
-This is a starting point for TypeScript solutions to the
+This repository started as a completed Code Crafters advanced programming challenge
 ["Build Your own Claude Code" Challenge](https://codecrafters.io/challenges/claude-code).
 
-Claude Code is an AI coding assistant that uses Large Language Models (LLMs) to
-understand code and perform actions through tool calls. In this challenge,
-you'll build your own Claude Code from scratch by implementing an LLM-powered
-coding assistant.
+## Develop
+- Notes
+   - Run with `bun`
+   - Add tests to `.\test`
 
-Along the way you'll learn about HTTP RESTful APIs, OpenAI-compatible tool
-calling, agent loop, and how to integrate multiple tools into an AI assistant.
-
-**Note**: If you're viewing this repo on GitHub, head over to
-[codecrafters.io](https://codecrafters.io) to try the challenge.
-
-# Passing the first stage
-
-The entry point for your `claude-code` implementation is in `app/main.ts`. Study
-and uncomment the relevant code, and submit to pass the first stage:
-
-```sh
-codecrafters submit
-```
-
-# Stage 2 & beyond
-
-Note: This section is for stages 2 and beyond.
-
-1. Ensure you have `bun (1.2)` installed locally.
-2. Run `./your_program.sh` to run your program, which is implemented in
-   `app/main.ts`.
-3. Run `codecrafters submit` to submit your solution to CodeCrafters. Test
-   output will be streamed to your terminal.
+## TODOs
+[Roadmap](https://github.com/colinwilliams91/streaming/blob/main/PARTS.txt)
+- [ ] ...
